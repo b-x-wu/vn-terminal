@@ -287,6 +287,7 @@ GameObject:
   - component: {fileID: 1217552286}
   - component: {fileID: 1217552285}
   - component: {fileID: 1217552284}
+  - component: {fileID: 1217552288}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -378,6 +379,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1217552288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1217552283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0e3b123311192341b9927eba28b2707, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1246889470
 GameObject:
   m_ObjectHideFlags: 0
@@ -527,7 +540,7 @@ MonoBehaviour:
     m_AlignByGeometry: 0
     m_RichText: 0
     m_HorizontalOverflow: 1
-    m_VerticalOverflow: 0
+    m_VerticalOverflow: 1
     m_LineSpacing: 1
   m_Text: 
 --- !u!222 &1319386168
@@ -626,6 +639,7 @@ GameObject:
   - component: {fileID: 1476264764}
   - component: {fileID: 1476264763}
   - component: {fileID: 1476264762}
+  - component: {fileID: 1476264765}
   m_Layer: 5
   m_Name: InputField
   m_TagString: Untagged
@@ -761,6 +775,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1476264760}
   m_CullTransparentMesh: 1
+--- !u!114 &1476264765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1476264760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a550afc5f3526249880f6d7ffe00f30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1696941209
 GameObject:
   m_ObjectHideFlags: 0
@@ -772,9 +798,10 @@ GameObject:
   - component: {fileID: 1696941210}
   - component: {fileID: 1696941211}
   - component: {fileID: 1696941212}
+  - component: {fileID: 1696941213}
   m_Layer: 5
   m_Name: DisplayText
-  m_TagString: Untagged
+  m_TagString: DisplayText
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -841,3 +868,15 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Lorem ipsum whatever whatever...
+--- !u!114 &1696941213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1696941209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0e3b123311192341b9927eba28b2707, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

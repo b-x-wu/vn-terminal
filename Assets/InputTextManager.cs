@@ -26,7 +26,9 @@ public class InputTextManager : MonoBehaviour
     {
         displayTextManager.PrintStringToDisplay("Working on the process. Input Text: [" + this.inputField.text + "]");
 
-        displayTextManager.PrintStringToDisplay("Valid and worked.");
+        this.terminalProcess.WriteInput(userInput);
+
+        displayTextManager.PrintStringToDisplay("Waiting on output");
         this.inputField.text = "";
         this.inputField.ActivateInputField();
     }

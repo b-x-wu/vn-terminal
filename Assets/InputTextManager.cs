@@ -15,22 +15,27 @@ public class InputTextManager : MonoBehaviour
 
     private void Awake()
     {
+        // TODO: is there a prettier way to do this?
         this.displayTextManager = GameObject.FindGameObjectWithTag("DisplayText").GetComponent<DisplayTextManager>();
         this.inputField = this.GetComponent<InputField>();
         this.inputField.onEndEdit.AddListener(this.AcceptStringInput);
+
         this.terminalProcess = new TerminalProcess();
+        this.terminalProcess.StandardOutputReceived += this.StandardOutputReceivedHandler;
         this.terminalProcess.Start();
     }
 
     void AcceptStringInput(string userInput)
     {
-        displayTextManager.PrintStringToDisplay("Working on the process. Input Text: [" + this.inputField.text + "]");
-
         this.terminalProcess.WriteInput(userInput);
 
-        displayTextManager.PrintStringToDisplay("Waiting on output");
         this.inputField.text = "";
         this.inputField.ActivateInputField();
+    }
+
+    void StandardOutputReceivedHandler(object sender, string message)
+    {
+        this.displayTextManager.PrintStringToDisplay(message);
     }
 
     void OnApplicationQuit()

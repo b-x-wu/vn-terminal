@@ -12,6 +12,7 @@ public class TerminalProcess
     public bool started { get; private set; }
     public bool exited { get; private set; }
     private StringBuilder outputBuilder;
+    public event EventHandler<string> StandardOutputReceived;
 
     public TerminalProcess()
     {
@@ -30,7 +31,7 @@ public class TerminalProcess
         {
             StartInfo = startInfo
         };
-        this.process.OutputDataReceived += this.OutputHandler;
+        this.process.OutputDataReceived += this.StandardOutputReceivedHandler;
     }
 
     // TODO: create extra constructors
@@ -45,11 +46,6 @@ public class TerminalProcess
         });
     }
 
-    // TODO: the model is this. let the user write input in whenever they want
-    //       set up a listener so that the display is updated whenever
-    //       there's a detected change in the output stream. the two happen independently
-    //       of one another
-
     public void WriteInput(string inputString)
     {
         if (!String.IsNullOrEmpty(inputString))
@@ -58,22 +54,15 @@ public class TerminalProcess
         }
     }
 
-    private void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
+    private void StandardOutputReceivedHandler(object sendingProcess, DataReceivedEventArgs outLine)
     {
-        UnityEngine.Debug.Log("Firing OutputHandler: outLine.data = [" + outLine.Data + "]");
         if (!String.IsNullOrEmpty(outLine.Data))
         {
             this.outputBuilder.Append(Environment.NewLine + outLine.Data);
+            StandardOutputReceived?.Invoke(this, outLine.Data);
         }
     }
 
-    public async Task<string> ReadOutput()
-    {
-        string output = await this.process.StandardOutput.ReadToEndAsync();
-        return output;
-    }
-
-    // returns true if the task is successfully killed. false otherwise
     public bool Exit()
     {
         if (!this.started)

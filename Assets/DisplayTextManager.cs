@@ -2,17 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using System.Threading.Tasks;
 public class DisplayTextManager : MonoBehaviour
 {
-    Text displayText;
+    private Text displayTextObject;
+    public string currentText;
 
     private void Awake()
     {
-        this.displayText = GetComponent<Text>();
+        this.displayTextObject = gameObject.GetComponent<Text>();
     }
+
+
     public void PrintStringToDisplay(string displayString)
     {
-        this.displayText.text = displayString;
+        this.currentText = displayString;
+        Task.Run(() => {
+            this.currentText = displayString;
+        });
+    }
+
+    void Update()
+    {
+        if (this.displayTextObject != null)
+        {
+            this.displayTextObject.text = this.currentText;
+        }
     }
 }

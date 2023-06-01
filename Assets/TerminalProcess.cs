@@ -18,7 +18,7 @@ public class TerminalProcess
     {
         ProcessStartInfo startInfo = new ProcessStartInfo()
         {
-            FileName = "C:\\Program Files\\Git\\git-cmd.exe",
+            FileName = @"C:\Windows\System32\cmd.exe",
             UseShellExecute = false,
             RedirectStandardError = true,
             RedirectStandardInput = true,

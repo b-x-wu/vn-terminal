@@ -35,7 +35,7 @@ public class InputTextManager : MonoBehaviour
 
     void StandardOutputReceivedHandler(object sender, string message)
     {
-        this.displayTextManager.PrintStringToDisplay(message);
+        this.displayTextManager.ReceiveOutput(message);
     }
 
     void OnApplicationQuit()

@@ -31,6 +31,8 @@ public class ControllerScript : MonoBehaviour
     private string currentLine = "";
     public float repeatRate;
     private ControllerState controllerState = ControllerState.ReadyForUserInput;
+    public Color standardOutputColor = Color.white;
+    public Color standardErrorColor = Color.red;
 
     private void Awake()
     {
@@ -64,7 +66,7 @@ public class ControllerScript : MonoBehaviour
         if (controllerState == ControllerState.ReadyForUserInput) { controllerState = ControllerState.ReadyForPrintLine; }
         lock (messageBuffer)
         {
-            messageBuffer.Enqueue(new Message{type = MessageType.StdError, message = standardErrorString});
+            messageBuffer.Enqueue(new Message{ type = MessageType.StdError, message = standardErrorString });
         }
     }
 
@@ -72,7 +74,7 @@ public class ControllerScript : MonoBehaviour
     {
         if (idx >= currentLine.Length) {
             currentLine = "";
-            controllerState = messageBuffer.Count == 0 ? ControllerState.ReadyForUserInput : ControllerState.ReadyForUserContinue;
+            controllerState = ControllerState.ReadyForUserContinue;
             yield break;
         }
         
@@ -83,6 +85,12 @@ public class ControllerScript : MonoBehaviour
 
     private void DisplayCurrentLine()
     {
+        if (messageBuffer.Count == 0)
+        {
+            controllerState = ControllerState.ReadyForUserInput;
+            return;
+        }
+
         controllerState = ControllerState.PrintingLine;
         outputField.text = "";
         Message currentMessage;
@@ -91,7 +99,7 @@ public class ControllerScript : MonoBehaviour
             currentMessage = messageBuffer.Dequeue();
         }
         currentLine = currentMessage.message;
-        outputField.color = currentMessage.type == MessageType.StdOutput ? new Color(1, 1, 1) : new Color(1, 0, 0);
+        outputField.color = currentMessage.type == MessageType.StdOutput ? standardOutputColor : standardErrorColor;
         StartCoroutine(DisplayCurrentLine(0));
     }
 
@@ -111,7 +119,13 @@ public class ControllerScript : MonoBehaviour
 
         if (controllerState == ControllerState.ReadyForUserContinue)
         {
-            controllerState = Input.GetKey("space") ? ControllerState.ReadyForPrintLine : controllerState;
+            if (messageBuffer.Count == 0)
+            {
+                controllerState = Input.GetKey("space") ? ControllerState.ReadyForUserContinue : ControllerState.ReadyForUserInput;
+                return;
+            }
+
+            controllerState = Input.GetKey("space") ? ControllerState.ReadyForPrintLine : ControllerState.ReadyForUserContinue;
             return;
         }
 

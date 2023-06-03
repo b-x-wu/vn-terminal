@@ -10,13 +10,14 @@ public class ControllerScript : MonoBehaviour
     {
         ReadyForUserInput,
         ReadyForUserContinue,
+        ReadyForPrintLine,
         PrintingLine,
     }
     private InputField inputField;
     private Text outputField;
     private Queue<string> outputBuffer = new Queue<string>();
     TerminalProcess terminalProcess;
-    private string currentText = "";
+    private string currentLine = "";
     public float repeatRate;
     private ControllerState controllerState = ControllerState.ReadyForUserInput;
 
@@ -33,13 +34,13 @@ public class ControllerScript : MonoBehaviour
 
     private void HandleInputFieldInput(string inputString)
     {
-        Debug.Log($"Got input line: [{inputString}]");
         terminalProcess.WriteInput(inputString);
         inputField.text = "";
     }
 
     private void HandleStandardOutputReceived(object sender, string standardOutputString)
     {
+        if (controllerState == ControllerState.ReadyForUserInput) { controllerState = ControllerState.ReadyForPrintLine; }
         lock (outputBuffer)
         {
             outputBuffer.Enqueue(standardOutputString);
@@ -48,13 +49,13 @@ public class ControllerScript : MonoBehaviour
 
     private IEnumerator DisplayCurrentLine(int idx)
     {
-        if (idx >= currentText.Length) {
-            currentText = "";
-            controllerState = ControllerState.ReadyForUserContinue;
+        if (idx >= currentLine.Length) {
+            currentLine = "";
+            controllerState = outputBuffer.Count == 0 ? ControllerState.ReadyForUserInput : ControllerState.ReadyForUserContinue;
             yield break;
         }
         
-        outputField.text += currentText[idx];
+        outputField.text += currentLine[idx];
         yield return new WaitForSeconds(repeatRate);
         yield return DisplayCurrentLine(idx + 1);
     }
@@ -65,7 +66,7 @@ public class ControllerScript : MonoBehaviour
         outputField.text = "";
         lock (outputBuffer)
         {
-            currentText = outputBuffer.Dequeue();
+            currentLine = outputBuffer.Dequeue();
         }
         StartCoroutine(DisplayCurrentLine(0));
     }
@@ -73,9 +74,24 @@ public class ControllerScript : MonoBehaviour
     private void Update()
     {
         if (outputField == null) { return; }
-        if (outputBuffer.Count == 0) { return; }
-        if (currentText != "") { return; } // current text printing already invoked
 
+        if (controllerState == ControllerState.ReadyForUserInput) {
+            inputField.ActivateInputField();
+            return;
+        }
+
+        inputField.DeactivateInputField();
+        if (controllerState == ControllerState.PrintingLine) {
+            return;
+        }
+
+        if (controllerState == ControllerState.ReadyForUserContinue)
+        {
+            controllerState = Input.GetKey("space") ? ControllerState.ReadyForPrintLine : controllerState;
+            return;
+        }
+
+        // controllerState == ControllerState.ReadyForPrintLine
         DisplayCurrentLine();
     }
 

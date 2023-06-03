@@ -6,12 +6,19 @@ using System.Threading.Tasks;
 
 public class ControllerScript : MonoBehaviour
 {
+    private enum ControllerState
+    {
+        ReadyForUserInput,
+        ReadyForUserContinue,
+        PrintingLine,
+    }
     private InputField inputField;
     private Text outputField;
     private Queue<string> outputBuffer = new Queue<string>();
     TerminalProcess terminalProcess;
     private string currentText = "";
     public float repeatRate;
+    private ControllerState controllerState = ControllerState.ReadyForUserInput;
 
     private void Awake()
     {
@@ -26,32 +33,41 @@ public class ControllerScript : MonoBehaviour
 
     private void HandleInputFieldInput(string inputString)
     {
+        Debug.Log($"Got input line: [{inputString}]");
         terminalProcess.WriteInput(inputString);
-        // TODO: set state?
         inputField.text = "";
-        inputField.DeactivateInputField(); // TODO: activate it again when the output buffer frees up
     }
 
     private void HandleStandardOutputReceived(object sender, string standardOutputString)
     {
-        // TODO: does this need to be in a task?
         lock (outputBuffer)
         {
             outputBuffer.Enqueue(standardOutputString);
         }
     }
 
-    private void DisplayCurrentCharacter()
+    private IEnumerator DisplayCurrentLine(int idx)
     {
-        if (this.currentText == "") { return; }
-        string characterToDisplay = currentText.Substring(0, 1);
-        outputField.text += characterToDisplay;
-        currentText = currentText.Remove(0, 1);
+        if (idx >= currentText.Length) {
+            currentText = "";
+            controllerState = ControllerState.ReadyForUserContinue;
+            yield break;
+        }
+        
+        outputField.text += currentText[idx];
+        yield return new WaitForSeconds(repeatRate);
+        yield return DisplayCurrentLine(idx + 1);
     }
 
-    private void DisplayCurrentText()
+    private void DisplayCurrentLine()
     {
-        InvokeRepeating("DisplayCurrentCharacter", 0.0f, repeatRate);
+        controllerState = ControllerState.PrintingLine;
+        outputField.text = "";
+        lock (outputBuffer)
+        {
+            currentText = outputBuffer.Dequeue();
+        }
+        StartCoroutine(DisplayCurrentLine(0));
     }
 
     private void Update()
@@ -60,9 +76,7 @@ public class ControllerScript : MonoBehaviour
         if (outputBuffer.Count == 0) { return; }
         if (currentText != "") { return; } // current text printing already invoked
 
-        outputField.text = "";
-        currentText = outputBuffer.Dequeue();
-        DisplayCurrentText();
+        DisplayCurrentLine();
     }
 
     private void OnApplicationQuit()

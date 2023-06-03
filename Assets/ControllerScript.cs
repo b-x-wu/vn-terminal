@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Threading.Tasks;
+using Unity.Collections;
 
 public class ControllerScript : MonoBehaviour
 {
@@ -13,9 +13,20 @@ public class ControllerScript : MonoBehaviour
         ReadyForPrintLine,
         PrintingLine,
     }
+    private enum MessageType
+    {
+        StdOutput,
+        StdError,
+    }
+    private struct Message
+    {
+        [ReadOnly]
+        public MessageType type;
+        public string message;
+    }
     private InputField inputField;
     private Text outputField;
-    private Queue<string> outputBuffer = new Queue<string>();
+    private Queue<Message> messageBuffer = new Queue<Message>();
     TerminalProcess terminalProcess;
     private string currentLine = "";
     public float repeatRate;
@@ -28,7 +39,8 @@ public class ControllerScript : MonoBehaviour
         inputField.onEndEdit.AddListener(HandleInputFieldInput);
 
         terminalProcess = new TerminalProcess();
-        this.terminalProcess.StandardOutputReceived += HandleStandardOutputReceived;
+        terminalProcess.StandardOutputReceived += HandleStandardOutputReceived;
+        terminalProcess.StandardErrorReceived += HandleStandardErrorReceived;
         terminalProcess.Start();
     }
 
@@ -41,9 +53,18 @@ public class ControllerScript : MonoBehaviour
     private void HandleStandardOutputReceived(object sender, string standardOutputString)
     {
         if (controllerState == ControllerState.ReadyForUserInput) { controllerState = ControllerState.ReadyForPrintLine; }
-        lock (outputBuffer)
+        lock (messageBuffer)
         {
-            outputBuffer.Enqueue(standardOutputString);
+            messageBuffer.Enqueue(new Message{type = MessageType.StdOutput, message = standardOutputString});
+        }
+    }
+
+    private void HandleStandardErrorReceived(object sender, string standardErrorString)
+    {
+        if (controllerState == ControllerState.ReadyForUserInput) { controllerState = ControllerState.ReadyForPrintLine; }
+        lock (messageBuffer)
+        {
+            messageBuffer.Enqueue(new Message{type = MessageType.StdError, message = standardErrorString});
         }
     }
 
@@ -51,7 +72,7 @@ public class ControllerScript : MonoBehaviour
     {
         if (idx >= currentLine.Length) {
             currentLine = "";
-            controllerState = outputBuffer.Count == 0 ? ControllerState.ReadyForUserInput : ControllerState.ReadyForUserContinue;
+            controllerState = messageBuffer.Count == 0 ? ControllerState.ReadyForUserInput : ControllerState.ReadyForUserContinue;
             yield break;
         }
         
@@ -64,10 +85,13 @@ public class ControllerScript : MonoBehaviour
     {
         controllerState = ControllerState.PrintingLine;
         outputField.text = "";
-        lock (outputBuffer)
+        Message currentMessage;
+        lock (messageBuffer)
         {
-            currentLine = outputBuffer.Dequeue();
+            currentMessage = messageBuffer.Dequeue();
         }
+        currentLine = currentMessage.message;
+        outputField.color = currentMessage.type == MessageType.StdOutput ? new Color(1, 1, 1) : new Color(1, 0, 0);
         StartCoroutine(DisplayCurrentLine(0));
     }
 

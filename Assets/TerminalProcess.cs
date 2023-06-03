@@ -13,6 +13,7 @@ public class TerminalProcess
     public bool exited { get; private set; }
     private StringBuilder outputBuilder;
     public event EventHandler<string> StandardOutputReceived;
+    public event EventHandler<string> StandardErrorReceived;
 
     public TerminalProcess()
     {
@@ -23,8 +24,7 @@ public class TerminalProcess
             RedirectStandardError = true,
             RedirectStandardInput = true,
             RedirectStandardOutput = true,
-            CreateNoWindow = true,
-            // Arguments = " -c \"" + argument + " \""
+            CreateNoWindow = true
         };
         this.outputBuilder = new StringBuilder();
         this.process = new Process
@@ -32,6 +32,7 @@ public class TerminalProcess
             StartInfo = startInfo
         };
         this.process.OutputDataReceived += this.StandardOutputReceivedHandler;
+        this.process.ErrorDataReceived += this.StandardErrorReceivedHandler;
     }
 
     // TODO: create extra constructors
@@ -42,6 +43,7 @@ public class TerminalProcess
         await Task.Run(() => {
             this.process.Start();
             this.process.BeginOutputReadLine();
+            this.process.BeginErrorReadLine();
             UnityEngine.Debug.Log("Starting process...");
         });
     }
@@ -63,6 +65,15 @@ public class TerminalProcess
         }
     }
 
+    private void StandardErrorReceivedHandler(object sendingProcess, DataReceivedEventArgs outLine)
+    {
+        if (!String.IsNullOrEmpty(outLine.Data))
+        {
+            this.outputBuilder.Append(Environment.NewLine + outLine.Data);
+            StandardErrorReceived?.Invoke(this, outLine.Data);
+        }
+    }
+
     public bool Exit()
     {
         if (!this.started)
@@ -78,6 +89,7 @@ public class TerminalProcess
         this.process.StandardInput.Close();
         this.process.Close();
         this.exited = true;
+        this.process.Dispose();
         UnityEngine.Debug.Log(this.outputBuilder);
         return true;
     }

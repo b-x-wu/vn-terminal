@@ -27,8 +27,9 @@ public class ControllerScript : MonoBehaviour
     private InputField inputField;
     private Text outputField;
     private Image outputImage;
+    private Image continueArrow;
     private Queue<Message> messageBuffer = new Queue<Message>();
-    TerminalProcess terminalProcess;
+    private TerminalProcess terminalProcess;
     private string currentLine = "";
     public float repeatRate;
     private ControllerState controllerState = ControllerState.ReadyForUserInput;
@@ -49,6 +50,8 @@ public class ControllerScript : MonoBehaviour
         inputField = GameObject.FindGameObjectWithTag("TextInput").GetComponent<InputField>();
         outputField = GameObject.FindGameObjectWithTag("TextOutput").GetComponent<Text>();
         outputImage = GameObject.FindGameObjectWithTag("Player").GetComponent<Image>();
+        continueArrow = GameObject.Find("ContinueArrow").GetComponent<Image>();
+        continueArrow.color = Color.clear;
         inputField.onEndEdit.AddListener(HandleInputFieldInput);
 
         terminalProcess = new TerminalProcess();
@@ -123,16 +126,19 @@ public class ControllerScript : MonoBehaviour
 
         if (controllerState == ControllerState.ReadyForUserInput) {
             inputField.ActivateInputField();
+            continueArrow.color = Color.clear;
             return;
         }
 
         inputField.DeactivateInputField();
         if (controllerState == ControllerState.PrintingLine) {
+            continueArrow.color = Color.clear;
             return;
         }
 
         if (controllerState == ControllerState.ReadyForUserContinue)
         {
+            continueArrow.color = Color.white;
             if (messageBuffer.Count == 0)
             {
                 controllerState = Input.GetKey("space") ? ControllerState.ReadyForUserContinue : ControllerState.ReadyForUserInput;
@@ -144,6 +150,7 @@ public class ControllerScript : MonoBehaviour
         }
 
         // controllerState == ControllerState.ReadyForPrintLine
+        continueArrow.color = Color.clear;
         DisplayCurrentLine();
     }
 

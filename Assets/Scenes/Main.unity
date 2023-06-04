@@ -231,6 +231,16 @@ MonoBehaviour:
   repeatRate: 0.01
   standardOutputColor: {r: 1, g: 1, b: 1, a: 1}
   standardErrorColor: {r: 1, g: 0, b: 0, a: 1}
+  standardOutputCharacterSprites:
+  - {fileID: 21300000, guid: c7ac6b25f9e98234c8c40df6968891b3, type: 3}
+  - {fileID: 21300000, guid: 939aa11580ffa3d489499340f8fac33b, type: 3}
+  - {fileID: 21300000, guid: db7016476e272f14d9343cc61d131a1e, type: 3}
+  - {fileID: 21300000, guid: 1a71f8910ca1fb741b8b7df12d902956, type: 3}
+  standardErrorCharacterSprites:
+  - {fileID: 21300000, guid: d7e838b4b212e6a4cb11faa633f2ba7b, type: 3}
+  - {fileID: 21300000, guid: 547f4957a02d6ff40bad820c7e12ff78, type: 3}
+  - {fileID: 21300000, guid: b5a2f07fb633d8541bd23279c02dd342, type: 3}
+  - {fileID: 21300000, guid: 3f3ed5d5dfc0f524699787f045aeeddd, type: 3}
 --- !u!4 &352671161
 Transform:
   m_ObjectHideFlags: 0
@@ -411,7 +421,7 @@ GameObject:
   - component: {fileID: 1170408020}
   m_Layer: 5
   m_Name: Character
-  m_TagString: TextOutput
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

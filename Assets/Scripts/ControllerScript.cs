@@ -34,8 +34,15 @@ public class ControllerScript : MonoBehaviour
     private ControllerState controllerState = ControllerState.ReadyForUserInput;
     public Color standardOutputColor = Color.white;
     public Color standardErrorColor = Color.red;
-    public Sprite standardOutputCharacterSprite;
-    public Sprite standardErrorCharacterSprite;
+    public List<Sprite> standardOutputCharacterSprites;
+    public List<Sprite> standardErrorCharacterSprites;
+    public static T GetRandomListElement<T>(List<T> list)
+    {
+        if (list.Count == 0) { return default(T); }
+        int idx = Mathf.FloorToInt(Random.value * list.Count);
+        if (idx == list.Count) { idx -= 1; } // Random.value is 1 inclusive
+        return list[idx];
+    }
 
     private void Awake()
     {
@@ -104,7 +111,9 @@ public class ControllerScript : MonoBehaviour
         }
         currentLine = currentMessage.message;
         outputField.color = currentMessage.type == MessageType.StdOutput ? standardOutputColor : standardErrorColor;
-        outputImage.sprite = currentMessage.type == MessageType.StdOutput ? standardOutputCharacterSprite : standardErrorCharacterSprite;
+        outputImage.sprite = currentMessage.type == MessageType.StdOutput 
+            ? GetRandomListElement<Sprite>(standardOutputCharacterSprites) 
+            : GetRandomListElement<Sprite>(standardErrorCharacterSprites);
         StartCoroutine(DisplayCurrentLine(0));
     }
 

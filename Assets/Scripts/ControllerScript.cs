@@ -26,6 +26,7 @@ public class ControllerScript : MonoBehaviour
     }
     private InputField inputField;
     private Text outputField;
+    private Image outputImage;
     private Queue<Message> messageBuffer = new Queue<Message>();
     TerminalProcess terminalProcess;
     private string currentLine = "";
@@ -33,11 +34,14 @@ public class ControllerScript : MonoBehaviour
     private ControllerState controllerState = ControllerState.ReadyForUserInput;
     public Color standardOutputColor = Color.white;
     public Color standardErrorColor = Color.red;
+    public Sprite standardOutputCharacterSprite;
+    public Sprite standardErrorCharacterSprite;
 
     private void Awake()
     {
         inputField = GameObject.FindGameObjectWithTag("TextInput").GetComponent<InputField>();
         outputField = GameObject.FindGameObjectWithTag("TextOutput").GetComponent<Text>();
+        outputImage = GameObject.FindGameObjectWithTag("Player").GetComponent<Image>();
         inputField.onEndEdit.AddListener(HandleInputFieldInput);
 
         terminalProcess = new TerminalProcess();
@@ -100,6 +104,7 @@ public class ControllerScript : MonoBehaviour
         }
         currentLine = currentMessage.message;
         outputField.color = currentMessage.type == MessageType.StdOutput ? standardOutputColor : standardErrorColor;
+        outputImage.sprite = currentMessage.type == MessageType.StdOutput ? standardOutputCharacterSprite : standardErrorCharacterSprite;
         StartCoroutine(DisplayCurrentLine(0));
     }
 

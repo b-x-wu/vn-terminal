@@ -11,7 +11,7 @@ public class TerminalProcess
     private readonly Process process;
     public bool started { get; private set; }
     public bool exited { get; private set; }
-    private StringBuilder outputBuilder;
+    public StringBuilder outputBuilder { get; private set; }
     public event EventHandler<string> StandardOutputReceived;
     public event EventHandler<string> StandardErrorReceived;
 

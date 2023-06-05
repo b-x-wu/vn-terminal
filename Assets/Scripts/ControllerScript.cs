@@ -70,6 +70,14 @@ public class ControllerScript : MonoBehaviour
         repeatRate = configData.repeatRate;
         standardOutputColor = configData.standardOutputColor;
         standardErrorColor = configData.standardErrorColor;
+        if (configData.standardOutputCharacterSprites != null && configData.standardOutputCharacterSprites.Count > 0)
+        {
+            standardOutputCharacterSprites = configData.standardOutputCharacterSprites;
+        }
+        if (configData.standardErrorCharacterSprites != null && configData.standardErrorCharacterSprites.Count > 0)
+        {
+            standardErrorCharacterSprites = configData.standardErrorCharacterSprites;
+        }
     }
 
     private void HandleInputFieldInput(string inputString)
@@ -173,6 +181,8 @@ public class ControllerScript : MonoBehaviour
             repeatRate = repeatRate,
             standardOutputColor = standardOutputColor,
             standardErrorColor = standardErrorColor,
+            standardOutputCharacterSprites = standardOutputCharacterSprites,
+            standardErrorCharacterSprites = standardErrorCharacterSprites,
         };
         ConfigManager.WriteData(configData);
     }

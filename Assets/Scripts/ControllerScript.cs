@@ -24,6 +24,7 @@ public class ControllerScript : MonoBehaviour
         public MessageType type;
         public string message;
     }
+
     private InputField inputField;
     private Text outputField;
     private Image outputImage;
@@ -37,6 +38,7 @@ public class ControllerScript : MonoBehaviour
     public Color standardErrorColor = Color.red;
     public List<Sprite> standardOutputCharacterSprites;
     public List<Sprite> standardErrorCharacterSprites;
+
     public static T GetRandomListElement<T>(List<T> list)
     {
         if (list.Count == 0) { return default(T); }
@@ -54,10 +56,20 @@ public class ControllerScript : MonoBehaviour
         continueArrow.color = Color.clear;
         inputField.onEndEdit.AddListener(HandleInputFieldInput);
 
+        ReadConfig();
+
         terminalProcess = new TerminalProcess();
         terminalProcess.StandardOutputReceived += HandleStandardOutputReceived;
         terminalProcess.StandardErrorReceived += HandleStandardErrorReceived;
         terminalProcess.Start();
+    }
+
+    private void ReadConfig()
+    {
+        ConfigManager.ConfigData configData = ConfigManager.ReadData();
+        repeatRate = configData.repeatRate;
+        standardOutputColor = configData.standardOutputColor;
+        standardErrorColor = configData.standardErrorColor;
     }
 
     private void HandleInputFieldInput(string inputString)
@@ -154,8 +166,20 @@ public class ControllerScript : MonoBehaviour
         DisplayCurrentLine();
     }
 
+    private void WriteConfig()
+    {
+        ConfigManager.ConfigData configData = new ConfigManager.ConfigData()
+        {
+            repeatRate = repeatRate,
+            standardOutputColor = standardOutputColor,
+            standardErrorColor = standardErrorColor,
+        };
+        ConfigManager.WriteData(configData);
+    }
+
     private void OnApplicationQuit()
     {
         terminalProcess.Exit();
+        WriteConfig();
     }
 }

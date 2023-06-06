@@ -38,6 +38,7 @@ public class ControllerScript : MonoBehaviour
     public Color standardErrorColor = Color.red;
     public List<Sprite> standardOutputCharacterSprites;
     public List<Sprite> standardErrorCharacterSprites;
+    public Sprite canvasBackgroundSprite;
 
     public static T GetRandomListElement<T>(List<T> list)
     {
@@ -57,6 +58,7 @@ public class ControllerScript : MonoBehaviour
         inputField.onEndEdit.AddListener(HandleInputFieldInput);
 
         ReadConfig();
+        GameObject.Find("CanvasBackground").GetComponent<Image>().sprite = canvasBackgroundSprite;
 
         terminalProcess = new TerminalProcess();
         terminalProcess.StandardOutputReceived += HandleStandardOutputReceived;
@@ -78,6 +80,7 @@ public class ControllerScript : MonoBehaviour
         {
             standardErrorCharacterSprites = configData.standardErrorCharacterSprites;
         }
+        canvasBackgroundSprite = configData.canvasBackgroundSprite ?? canvasBackgroundSprite;
     }
 
     private void HandleInputFieldInput(string inputString)
@@ -183,6 +186,7 @@ public class ControllerScript : MonoBehaviour
             standardErrorColor = standardErrorColor,
             standardOutputCharacterSprites = standardOutputCharacterSprites,
             standardErrorCharacterSprites = standardErrorCharacterSprites,
+            canvasBackgroundSprite = canvasBackgroundSprite,
         };
         ConfigManager.WriteData(configData);
     }

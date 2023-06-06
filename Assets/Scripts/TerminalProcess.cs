@@ -15,18 +15,27 @@ public class TerminalProcess
     public event EventHandler<string> StandardOutputReceived;
     public event EventHandler<string> StandardErrorReceived;
 
-    public TerminalProcess(string workingDirectory)
+    public TerminalProcess(string workingDirectory, string shellFilePath)
     {
+        if (shellFilePath == null)
+        {
+            UnityEngine.Debug.LogError("No shell file path given.");
+            StandardErrorReceived?.Invoke(this, "No shell file path given.");
+            return;
+        }
         ProcessStartInfo startInfo = new ProcessStartInfo()
         {
-            FileName = @"C:\Windows\System32\cmd.exe",
+            FileName = shellFilePath,
             UseShellExecute = false,
-            WorkingDirectory = workingDirectory,
             RedirectStandardError = true,
             RedirectStandardInput = true,
             RedirectStandardOutput = true,
             CreateNoWindow = true
         };
+        if (workingDirectory != null)
+        {
+            startInfo.WorkingDirectory = workingDirectory;
+        }
         this.outputBuilder = new StringBuilder();
         this.process = new Process
         {

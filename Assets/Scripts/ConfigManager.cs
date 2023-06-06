@@ -10,6 +10,12 @@ public class ConfigManager
     public static string CONFIG_FILE_NAME = "config.json";
     public static string CHARACTER_SPRITE_DIRECTORY = Path.Join(Application.dataPath, "character_sprites");
     public static string CANVAS_BACKGROUND_SPRITE_DIRECTORY = Path.Join(Application.dataPath, "background_sprites");
+    public static Dictionary<RuntimePlatform, string> RUNTIME_PLATFORM_TO_DEFAULT_SHELL_FILE_PATH = new Dictionary<RuntimePlatform, string>(){
+        { RuntimePlatform.WindowsEditor, Environment.GetEnvironmentVariable("COMSPEC") ?? @"C:\Windows\System32\cmd.exe" },
+        { RuntimePlatform.WindowsPlayer, Environment.GetEnvironmentVariable("COMSPEC") ?? @"C:\Windows\System32\cmd.exe" },
+        { RuntimePlatform.LinuxPlayer, Environment.GetEnvironmentVariable("SHELL") ?? "/bin/bash" },
+        { RuntimePlatform.OSXPlayer, Environment.GetEnvironmentVariable("SHELL") ?? "/bin/zsh" },
+    };
     public static Dictionary<RuntimePlatform, string> RUNTIME_PLATFORM_TO_DEFAULT_WORKING_DIRECTORY = new Dictionary<RuntimePlatform, string>(){
         { RuntimePlatform.WindowsEditor, Environment.GetEnvironmentVariable("USERPROFILE") ?? "C:\\" },
         { RuntimePlatform.WindowsPlayer, Environment.GetEnvironmentVariable("USERPROFILE") ?? "C:\\" },
@@ -27,6 +33,7 @@ public class ConfigManager
         public List<string> standardErrorCharacterSprites;
         public string canvasBackgroundSprite;
         public string workingDirectory;
+        public string shellFilePath;
     }
 
     public class ConfigData
@@ -38,6 +45,7 @@ public class ConfigManager
         public List<Sprite> standardErrorCharacterSprites;
         public Sprite canvasBackgroundSprite;
         public string workingDirectory;
+        public string shellFilePath;
     }
 
     public static ConfigData DEFAULT_CONFIG_DATA = new ConfigData()
@@ -45,7 +53,8 @@ public class ConfigManager
         repeatRate = 0.01F,
         standardOutputColor = Color.white,
         standardErrorColor = Color.red,
-        workingDirectory = RUNTIME_PLATFORM_TO_DEFAULT_WORKING_DIRECTORY.ContainsKey(Application.platform) ? RUNTIME_PLATFORM_TO_DEFAULT_WORKING_DIRECTORY[Application.platform] : null
+        workingDirectory = RUNTIME_PLATFORM_TO_DEFAULT_WORKING_DIRECTORY.ContainsKey(Application.platform) ? RUNTIME_PLATFORM_TO_DEFAULT_WORKING_DIRECTORY[Application.platform] : null,
+        shellFilePath = RUNTIME_PLATFORM_TO_DEFAULT_SHELL_FILE_PATH.ContainsKey(Application.platform) ? RUNTIME_PLATFORM_TO_DEFAULT_SHELL_FILE_PATH[Application.platform] : null,
     };
 
     private static string WriteSprite(Sprite sprite, string directory)
@@ -100,6 +109,7 @@ public class ConfigManager
                 return WriteSprite(sprite, CHARACTER_SPRITE_DIRECTORY);
             }),
             workingDirectory = configData.workingDirectory,
+            shellFilePath = configData.shellFilePath,
         };
 
         serializableConfigData.standardOutputCharacterSprites.RemoveAll(path => path == null);
@@ -169,6 +179,9 @@ public class ConfigManager
                 workingDirectory = serializableConfigData.workingDirectory == null || serializableConfigData.workingDirectory == "" 
                     ? ConfigManager.DEFAULT_CONFIG_DATA.workingDirectory 
                     : serializableConfigData.workingDirectory,
+                shellFilePath = serializableConfigData.shellFilePath == null || serializableConfigData.shellFilePath == ""
+                    ? ConfigManager.DEFAULT_CONFIG_DATA.shellFilePath
+                    : serializableConfigData.shellFilePath
             };
             bool standardOutputColorParsed = ColorUtility.TryParseHtmlString(serializableConfigData.standardOutputColor, out configData.standardOutputColor);
             bool standardErrorColorParsed = ColorUtility.TryParseHtmlString(serializableConfigData.standardErrorColor, out configData.standardErrorColor);

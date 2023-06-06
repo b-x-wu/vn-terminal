@@ -40,6 +40,7 @@ public class ControllerScript : MonoBehaviour
     public List<Sprite> standardErrorCharacterSprites;
     public Sprite canvasBackgroundSprite;
     private string workingDirectory;
+    private string shellFilePath;
 
     public static T GetRandomListElement<T>(List<T> list)
     {
@@ -61,7 +62,7 @@ public class ControllerScript : MonoBehaviour
         ReadConfig();
         GameObject.Find("CanvasBackground").GetComponent<Image>().sprite = canvasBackgroundSprite;
 
-        terminalProcess = new TerminalProcess(workingDirectory);
+        terminalProcess = new TerminalProcess(workingDirectory, shellFilePath);
         terminalProcess.StandardOutputReceived += HandleStandardOutputReceived;
         terminalProcess.StandardErrorReceived += HandleStandardErrorReceived;
         terminalProcess.Start();
@@ -83,6 +84,7 @@ public class ControllerScript : MonoBehaviour
         }
         canvasBackgroundSprite = configData.canvasBackgroundSprite ?? canvasBackgroundSprite;
         workingDirectory = configData.workingDirectory;
+        shellFilePath = configData.shellFilePath;
     }
 
     private void HandleInputFieldInput(string inputString)
@@ -190,6 +192,7 @@ public class ControllerScript : MonoBehaviour
             standardErrorCharacterSprites = standardErrorCharacterSprites,
             canvasBackgroundSprite = canvasBackgroundSprite,
             workingDirectory = workingDirectory,
+            shellFilePath = shellFilePath,
         };
         ConfigManager.WriteData(configData);
     }

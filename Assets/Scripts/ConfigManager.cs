@@ -10,7 +10,12 @@ public class ConfigManager
     public static string CONFIG_FILE_NAME = "config.json";
     public static string CHARACTER_SPRITE_DIRECTORY = Path.Join(Application.dataPath, "character_sprites");
     public static string CANVAS_BACKGROUND_SPRITE_DIRECTORY = Path.Join(Application.dataPath, "background_sprites");
-    
+    public static Dictionary<RuntimePlatform, string> RUNTIME_PLATFORM_TO_DEFAULT_WORKING_DIRECTORY = new Dictionary<RuntimePlatform, string>(){
+        { RuntimePlatform.WindowsEditor, Environment.GetEnvironmentVariable("USERPROFILE") ?? "C:\\" },
+        { RuntimePlatform.WindowsPlayer, Environment.GetEnvironmentVariable("USERPROFILE") ?? "C:\\" },
+        { RuntimePlatform.LinuxPlayer, Environment.GetEnvironmentVariable("HOME") ?? "/" },
+        { RuntimePlatform.OSXPlayer, Environment.GetEnvironmentVariable("HOME") ?? "/" },
+    };
 
     [Serializable]
     public class SerializableConfigData
@@ -21,6 +26,7 @@ public class ConfigManager
         public List<string> standardOutputCharacterSprites;
         public List<string> standardErrorCharacterSprites;
         public string canvasBackgroundSprite;
+        public string workingDirectory;
     }
 
     public class ConfigData
@@ -31,6 +37,7 @@ public class ConfigManager
         public List<Sprite> standardOutputCharacterSprites;
         public List<Sprite> standardErrorCharacterSprites;
         public Sprite canvasBackgroundSprite;
+        public string workingDirectory;
     }
 
     public static ConfigData DEFAULT_CONFIG_DATA = new ConfigData()
@@ -38,6 +45,7 @@ public class ConfigManager
         repeatRate = 0.01F,
         standardOutputColor = Color.white,
         standardErrorColor = Color.red,
+        workingDirectory = RUNTIME_PLATFORM_TO_DEFAULT_WORKING_DIRECTORY.ContainsKey(Application.platform) ? RUNTIME_PLATFORM_TO_DEFAULT_WORKING_DIRECTORY[Application.platform] : null
     };
 
     private static string WriteSprite(Sprite sprite, string directory)
@@ -90,7 +98,8 @@ public class ConfigManager
             }),
             standardErrorCharacterSprites = configData.standardErrorCharacterSprites.ConvertAll<string>((Sprite sprite) => {
                 return WriteSprite(sprite, CHARACTER_SPRITE_DIRECTORY);
-            })
+            }),
+            workingDirectory = configData.workingDirectory,
         };
 
         serializableConfigData.standardOutputCharacterSprites.RemoveAll(path => path == null);
@@ -149,14 +158,17 @@ public class ConfigManager
             SerializableConfigData serializableConfigData = JsonUtility.FromJson<SerializableConfigData>(json);
             ConfigData configData = new ConfigData()
             {
-                repeatRate = serializableConfigData.repeatRate,
+                repeatRate = Math.Abs(serializableConfigData.repeatRate),
                 standardOutputCharacterSprites = serializableConfigData.standardOutputCharacterSprites.ConvertAll<Sprite>((string path) => {
                     return PathToSprite(path);
                 }),
                 standardErrorCharacterSprites = serializableConfigData.standardErrorCharacterSprites.ConvertAll<Sprite>((string path) => {
                     return PathToSprite(path);
                 }),
-                canvasBackgroundSprite = PathToSprite(serializableConfigData.canvasBackgroundSprite)
+                canvasBackgroundSprite = PathToSprite(serializableConfigData.canvasBackgroundSprite),
+                workingDirectory = serializableConfigData.workingDirectory == null || serializableConfigData.workingDirectory == "" 
+                    ? ConfigManager.DEFAULT_CONFIG_DATA.workingDirectory 
+                    : serializableConfigData.workingDirectory,
             };
             bool standardOutputColorParsed = ColorUtility.TryParseHtmlString(serializableConfigData.standardOutputColor, out configData.standardOutputColor);
             bool standardErrorColorParsed = ColorUtility.TryParseHtmlString(serializableConfigData.standardErrorColor, out configData.standardErrorColor);

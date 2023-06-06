@@ -15,12 +15,13 @@ public class TerminalProcess
     public event EventHandler<string> StandardOutputReceived;
     public event EventHandler<string> StandardErrorReceived;
 
-    public TerminalProcess()
+    public TerminalProcess(string workingDirectory)
     {
         ProcessStartInfo startInfo = new ProcessStartInfo()
         {
             FileName = @"C:\Windows\System32\cmd.exe",
             UseShellExecute = false,
+            WorkingDirectory = workingDirectory,
             RedirectStandardError = true,
             RedirectStandardInput = true,
             RedirectStandardOutput = true,
@@ -41,10 +42,22 @@ public class TerminalProcess
     {
         this.started = true;
         await Task.Run(() => {
-            this.process.Start();
-            this.process.BeginOutputReadLine();
-            this.process.BeginErrorReadLine();
-            UnityEngine.Debug.Log("Starting process...");
+            try
+            {
+                this.process.Start();
+                this.process.BeginOutputReadLine();
+                this.process.BeginErrorReadLine();
+                UnityEngine.Debug.Log("Starting process...");    
+            }
+            catch (System.ComponentModel.Win32Exception e)
+            {
+                string ERROR_MESSAGE = "Failed to start process. Invalid config.";
+                UnityEngine.Debug.LogError(ERROR_MESSAGE);
+                UnityEngine.Debug.LogError(e.Message);
+                started = false;
+                StandardErrorReceived?.Invoke(this, ERROR_MESSAGE);
+                StandardErrorReceived?.Invoke(this, e.Message);
+            }
         });
     }
 

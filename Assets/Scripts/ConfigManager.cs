@@ -64,6 +64,22 @@ public class ConfigManager
 
     public static void WriteData(ConfigData configData)
     {
+        try
+        {
+            if (Directory.Exists(CHARACTER_SPRITE_DIRECTORY))
+            {
+                Directory.Delete(CHARACTER_SPRITE_DIRECTORY, true);
+            }
+            if (Directory.Exists(CANVAS_BACKGROUND_SPRITE_DIRECTORY))
+            {
+                Directory.Delete(CANVAS_BACKGROUND_SPRITE_DIRECTORY, true);
+            }
+        }
+        catch (IOException e)
+        {
+            Debug.LogError("Error clearing sprite directories.");
+            Debug.LogError(e.Message);
+        }
         SerializableConfigData serializableConfigData = new SerializableConfigData()
         {
             repeatRate = configData.repeatRate,

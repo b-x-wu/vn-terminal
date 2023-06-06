@@ -34,6 +34,7 @@ public class ConfigManager
         public string canvasBackgroundSprite;
         public string workingDirectory;
         public string shellFilePath;
+        public string primaryColor;
     }
 
     public class ConfigData
@@ -46,6 +47,7 @@ public class ConfigManager
         public Sprite canvasBackgroundSprite;
         public string workingDirectory;
         public string shellFilePath;
+        public Color primaryColor;
     }
 
     public static ConfigData DEFAULT_CONFIG_DATA = new ConfigData()
@@ -184,14 +186,9 @@ public class ConfigManager
                     : serializableConfigData.shellFilePath
             };
             bool standardOutputColorParsed = ColorUtility.TryParseHtmlString(serializableConfigData.standardOutputColor, out configData.standardOutputColor);
+            configData.standardOutputColor = standardOutputColorParsed ? configData.standardOutputColor : ConfigManager.DEFAULT_CONFIG_DATA.standardOutputColor;
             bool standardErrorColorParsed = ColorUtility.TryParseHtmlString(serializableConfigData.standardErrorColor, out configData.standardErrorColor);
-
-            if (!(standardOutputColorParsed && standardErrorColorParsed))
-            {
-                throw new ArgumentException(
-                    $"Error parsing RGBA value.\nstandardOutputColor: \"{serializableConfigData.standardOutputColor}\", standardErrorColor: \"{serializableConfigData.standardErrorColor}\""
-                );
-            }
+            configData.standardErrorColor = standardErrorColorParsed ? configData.standardErrorColor : ConfigManager.DEFAULT_CONFIG_DATA.standardErrorColor;
 
             configData.standardOutputCharacterSprites.RemoveAll(sprite => sprite == null);
             configData.standardErrorCharacterSprites.RemoveAll(sprite => sprite == null);

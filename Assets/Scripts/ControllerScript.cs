@@ -41,6 +41,8 @@ public class ControllerScript : MonoBehaviour
     public Sprite canvasBackgroundSprite;
     private string workingDirectory;
     private string shellFilePath;
+    public Color primaryColor;
+    public Color secondaryColor;
 
     public static T GetRandomListElement<T>(List<T> list)
     {
@@ -61,6 +63,11 @@ public class ControllerScript : MonoBehaviour
 
         ReadConfig();
         GameObject.Find("CanvasBackground").GetComponent<Image>().sprite = canvasBackgroundSprite;
+        GameObject.Find("OutputField").GetComponent<Image>().color = primaryColor;
+        GameObject.Find("InputField").GetComponent<Image>().color = primaryColor;
+        GameObject.Find("OutputBorder").GetComponent<Image>().color = secondaryColor;
+        GameObject.Find("InputBorder").GetComponent<Image>().color = secondaryColor;
+        GameObject.Find("ContinueArrow").GetComponent<Image>().color = secondaryColor;
 
         terminalProcess = new TerminalProcess(workingDirectory, shellFilePath);
         terminalProcess.StandardOutputReceived += HandleStandardOutputReceived;
@@ -85,6 +92,8 @@ public class ControllerScript : MonoBehaviour
         canvasBackgroundSprite = configData.canvasBackgroundSprite ?? canvasBackgroundSprite;
         workingDirectory = configData.workingDirectory;
         shellFilePath = configData.shellFilePath;
+        primaryColor = configData.primaryColor;
+        secondaryColor = configData.secondaryColor;
     }
 
     private void HandleInputFieldInput(string inputString)
@@ -193,6 +202,8 @@ public class ControllerScript : MonoBehaviour
             canvasBackgroundSprite = canvasBackgroundSprite,
             workingDirectory = workingDirectory,
             shellFilePath = shellFilePath,
+            primaryColor = primaryColor,
+            secondaryColor = secondaryColor,
         };
         ConfigManager.WriteData(configData);
     }

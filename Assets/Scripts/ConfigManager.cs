@@ -35,6 +35,7 @@ public class ConfigManager
         public string workingDirectory;
         public string shellFilePath;
         public string primaryColor;
+        public string secondaryColor;
     }
 
     public class ConfigData
@@ -48,15 +49,18 @@ public class ConfigManager
         public string workingDirectory;
         public string shellFilePath;
         public Color primaryColor;
+        public Color secondaryColor;
     }
 
     public static ConfigData DEFAULT_CONFIG_DATA = new ConfigData()
     {
         repeatRate = 0.01F,
         standardOutputColor = Color.white,
-        standardErrorColor = Color.red,
+        standardErrorColor = new Color(0.8392157F, 0.145098F, 0.1137255F, 1F),
         workingDirectory = RUNTIME_PLATFORM_TO_DEFAULT_WORKING_DIRECTORY.ContainsKey(Application.platform) ? RUNTIME_PLATFORM_TO_DEFAULT_WORKING_DIRECTORY[Application.platform] : null,
         shellFilePath = RUNTIME_PLATFORM_TO_DEFAULT_SHELL_FILE_PATH.ContainsKey(Application.platform) ? RUNTIME_PLATFORM_TO_DEFAULT_SHELL_FILE_PATH[Application.platform] : null,
+        primaryColor = new Color(0.9607843F, 0.6039216F, 0.7215686F, 0.8078431F),
+        secondaryColor = Color.white,
     };
 
     private static string WriteSprite(Sprite sprite, string directory)
@@ -112,6 +116,8 @@ public class ConfigManager
             }),
             workingDirectory = configData.workingDirectory,
             shellFilePath = configData.shellFilePath,
+            primaryColor = "#" + ColorUtility.ToHtmlStringRGBA(configData.primaryColor),
+            secondaryColor = "#" + ColorUtility.ToHtmlStringRGBA(configData.secondaryColor),
         };
 
         serializableConfigData.standardOutputCharacterSprites.RemoveAll(path => path == null);
@@ -189,6 +195,10 @@ public class ConfigManager
             configData.standardOutputColor = standardOutputColorParsed ? configData.standardOutputColor : ConfigManager.DEFAULT_CONFIG_DATA.standardOutputColor;
             bool standardErrorColorParsed = ColorUtility.TryParseHtmlString(serializableConfigData.standardErrorColor, out configData.standardErrorColor);
             configData.standardErrorColor = standardErrorColorParsed ? configData.standardErrorColor : ConfigManager.DEFAULT_CONFIG_DATA.standardErrorColor;
+            bool primaryColorParsed = ColorUtility.TryParseHtmlString(serializableConfigData.primaryColor, out configData.primaryColor);
+            configData.primaryColor = primaryColorParsed ? configData.primaryColor : ConfigManager.DEFAULT_CONFIG_DATA.primaryColor;
+            bool secondaryColorParsed = ColorUtility.TryParseHtmlString(serializableConfigData.secondaryColor, out configData.secondaryColor);
+            configData.secondaryColor = secondaryColorParsed ? configData.secondaryColor : ConfigManager.DEFAULT_CONFIG_DATA.secondaryColor;
 
             configData.standardOutputCharacterSprites.RemoveAll(sprite => sprite == null);
             configData.standardErrorCharacterSprites.RemoveAll(sprite => sprite == null);

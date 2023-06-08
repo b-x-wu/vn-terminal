@@ -45,6 +45,7 @@ public class ControllerScript : MonoBehaviour
     public Color secondaryColor;
     private GameObject logContentContainer;
     public GameObject logTextPrefab;
+    public GameObject logScrollbar;
 
     public static T GetRandomListElement<T>(List<T> list)
     {
@@ -163,6 +164,7 @@ public class ControllerScript : MonoBehaviour
         Text logText = Instantiate(logTextPrefab, logContentContainer.transform).GetComponent<Text>();
         logText.text = currentLine;
         logText.color = currentColor;
+        logScrollbar.GetComponent<Scrollbar>().value = 0;
 
         StartCoroutine(DisplayCurrentLine(0));
     }

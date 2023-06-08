@@ -43,6 +43,8 @@ public class ControllerScript : MonoBehaviour
     private string shellFilePath;
     public Color primaryColor;
     public Color secondaryColor;
+    private GameObject logContentContainer;
+    public GameObject logTextPrefab;
 
     public static T GetRandomListElement<T>(List<T> list)
     {
@@ -68,6 +70,8 @@ public class ControllerScript : MonoBehaviour
         GameObject.Find("OutputBorder").GetComponent<Image>().color = secondaryColor;
         GameObject.Find("InputBorder").GetComponent<Image>().color = secondaryColor;
         GameObject.Find("ContinueArrow").GetComponent<Image>().color = secondaryColor;
+
+        logContentContainer = GameObject.Find("LogContentContainer");
 
         terminalProcess = new TerminalProcess(workingDirectory, shellFilePath);
         terminalProcess.StandardOutputReceived += HandleStandardOutputReceived;
@@ -105,9 +109,10 @@ public class ControllerScript : MonoBehaviour
     private void HandleStandardOutputReceived(object sender, string standardOutputString)
     {
         if (controllerState == ControllerState.ReadyForUserInput) { controllerState = ControllerState.ReadyForPrintLine; }
+        Message message = new Message{ type = MessageType.StdOutput, message = standardOutputString }; 
         lock (messageBuffer)
         {
-            messageBuffer.Enqueue(new Message{type = MessageType.StdOutput, message = standardOutputString});
+            messageBuffer.Enqueue(message);
         }
     }
 
@@ -149,10 +154,16 @@ public class ControllerScript : MonoBehaviour
             currentMessage = messageBuffer.Dequeue();
         }
         currentLine = currentMessage.message;
-        outputField.color = currentMessage.type == MessageType.StdOutput ? standardOutputColor : standardErrorColor;
+        Color currentColor = currentMessage.type == MessageType.StdOutput ? standardOutputColor : standardErrorColor;
+        outputField.color = currentColor;
         outputImage.sprite = currentMessage.type == MessageType.StdOutput 
             ? GetRandomListElement<Sprite>(standardOutputCharacterSprites) 
             : GetRandomListElement<Sprite>(standardErrorCharacterSprites);
+        
+        Text logText = Instantiate(logTextPrefab, logContentContainer.transform).GetComponent<Text>();
+        logText.text = currentLine;
+        logText.color = currentColor;
+
         StartCoroutine(DisplayCurrentLine(0));
     }
 

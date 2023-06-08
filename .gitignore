@@ -78,3 +78,6 @@ crashlytics-build.properties
 /[Aa]ssets/character_sprites.meta
 /[Aa]ssets/config.json
 /[Aa]ssets/config.json.meta
+
+# Distribution files
+/[Dd]ist

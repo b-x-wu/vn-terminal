@@ -46,6 +46,9 @@ public class ControllerScript : MonoBehaviour
     private GameObject logContentContainer;
     public GameObject logTextPrefab;
     public GameObject logScrollbar;
+    public GameObject logObject;
+    public GameObject logButton;
+    public GameObject logButtonText;
 
     public static T GetRandomListElement<T>(List<T> list)
     {
@@ -73,6 +76,8 @@ public class ControllerScript : MonoBehaviour
         GameObject.Find("ContinueArrow").GetComponent<Image>().color = secondaryColor;
 
         logContentContainer = GameObject.Find("LogContentContainer");
+        logObject.GetComponent<CanvasGroup>().alpha = 0;
+        logButton.GetComponent<Button>().onClick.AddListener(HandleShowLog);
 
         terminalProcess = new TerminalProcess(workingDirectory, shellFilePath);
         terminalProcess.StandardOutputReceived += HandleStandardOutputReceived;
@@ -99,6 +104,24 @@ public class ControllerScript : MonoBehaviour
         shellFilePath = configData.shellFilePath;
         primaryColor = configData.primaryColor;
         secondaryColor = configData.secondaryColor;
+    }
+
+    private void HandleShowLog()
+    {
+        Debug.Log(logScrollbar.GetComponent<Scrollbar>());
+        if (logScrollbar != null) logScrollbar.GetComponent<Scrollbar>().value = 0;
+        logObject.GetComponent<CanvasGroup>().alpha = 1;
+        logButtonText.GetComponent<Text>().text = "Hide Log";
+        logButton.GetComponent<Button>().onClick.RemoveAllListeners();
+        logButton.GetComponent<Button>().onClick.AddListener(HandleHideLog);
+    }
+
+    private void HandleHideLog()
+    {
+        logObject.GetComponent<CanvasGroup>().alpha = 0;
+        logButtonText.GetComponent<Text>().text = "View Log";
+        logButton.GetComponent<Button>().onClick.RemoveAllListeners();
+        logButton.GetComponent<Button>().onClick.AddListener(HandleShowLog);
     }
 
     private void HandleInputFieldInput(string inputString)

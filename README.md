@@ -1,6 +1,8 @@
 # Visual Novel Terminal
 
-A reskin for the terminal that makes it look like a visual novel. Currently a work in progress.
+A reskin for the terminal that makes it look like a visual novel.
+
+![screenshot of Visual Novel Terminal](docs/screenshot.png)
 
 ## Quick Start
 

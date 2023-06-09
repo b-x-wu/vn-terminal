@@ -77,11 +77,16 @@ public class ControllerScript : MonoBehaviour
         GameObject.Find("LogButtonText").GetComponent<Text>().color = standardOutputColor;
         GameObject.Find("InputTextField").GetComponent<Text>().color = standardOutputColor;
         GameObject.Find("StartingCharacter").GetComponent<Text>().color = standardOutputColor;
-
+        GameObject.Find("LogBorder").GetComponent<Image>().color = secondaryColor;
+        GameObject.Find("LogScrollbar").GetComponent<Image>().color = secondaryColor;
+        GameObject.Find("Handle").GetComponent<Image>().color = secondaryColor;
+        GameObject.Find("LogButtonBorder").GetComponent<Image>().color = secondaryColor;
 
         logContentContainer = GameObject.Find("LogContentContainer");
+        logObject.GetComponent<Image>().color = primaryColor;
         logObject.GetComponent<CanvasGroup>().alpha = 0;
         logButton.GetComponent<Button>().onClick.AddListener(HandleShowLog);
+        logButton.GetComponent<Image>().color = primaryColor;
 
         terminalProcess = new TerminalProcess(workingDirectory, shellFilePath);
         terminalProcess.StandardOutputReceived += HandleStandardOutputReceived;

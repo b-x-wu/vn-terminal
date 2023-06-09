@@ -738,7 +738,7 @@ GameObject:
   - component: {fileID: 827286973}
   - component: {fileID: 827286972}
   m_Layer: 5
-  m_Name: InputBorder
+  m_Name: LogButtonBorder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -983,7 +983,7 @@ GameObject:
   - component: {fileID: 1192674515}
   - component: {fileID: 1192674514}
   m_Layer: 5
-  m_Name: Log Border
+  m_Name: LogBorder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

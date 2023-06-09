@@ -24,11 +24,22 @@ Visual Novel Terminal allows user to customize and configure their terminal expe
 | `standardOutputCharacterSprites` 	| array of absolute file paths 	| The paths to the character sprites displayed whenever the terminal sends to the standard output stream. 	| [] (default sprites used) 	|
 | `standardErrorCharacterSprites` 	| array of absolute file paths 	| The paths to the character sprites displayed whenever the terminal sends to the standard error stream. 	| [] (default sprites used) 	|
 | `canvasBackgroundSprite` 	| absolute file path 	| The path to the background image. 	| "" (default sprite used) 	|
-| `workingDirectory` 	| absolute file path 	| The directory that the terminal starts in. 	| Windows: %USERPROFILE%, OSX: $HOME, Linux: $HOME 	|
-| `shellFilePath` 	| absolute file path 	| The directory of the shell program. 	| Windows: %COMSPEC%, OSX: $SHELL, Linux: $SHELL 	|
+| `workingDirectory` 	| absolute file path 	| The directory that the terminal starts in. 	| Windows: %USERPROFILE%<br>OSX: $HOME<br>Linux: $HOME 	|
+| `shellFilePath` 	| absolute file path 	| The directory of the shell program. 	| Windows: %COMSPEC%<br>OSX: $SHELL<br>Linux: $SHELL 	|
+
+## Screenshots
+
+![screenshot of Visual Novel terminal with Blahaj and the Trans flag](docs/screenshot_blahaj.png)
+
+![screenshot of Visual Novel terminal with Patrick Bateman from American Psycho in his apartment](docs/screenshot_american_psycho.png)
+
+![screenshot of Visual Novel terminal with the tbh creature](docs/screenshot_yippee.png)
+
 
 ## Credits
 
 Default backgrounds created by [Noraneko Games](https://noranekogames.itch.io/yumebackground).
 
 Default character models created by [Sutemo](https://sutemo.itch.io/female-character).
+
+American Psycho Apartment render created by [Alex Patej](https://www.artstation.com/artwork/w64NkO).

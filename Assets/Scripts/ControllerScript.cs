@@ -74,6 +74,10 @@ public class ControllerScript : MonoBehaviour
         GameObject.Find("OutputBorder").GetComponent<Image>().color = secondaryColor;
         GameObject.Find("InputBorder").GetComponent<Image>().color = secondaryColor;
         GameObject.Find("ContinueArrow").GetComponent<Image>().color = secondaryColor;
+        GameObject.Find("LogButtonText").GetComponent<Text>().color = standardOutputColor;
+        GameObject.Find("InputTextField").GetComponent<Text>().color = standardOutputColor;
+        GameObject.Find("StartingCharacter").GetComponent<Text>().color = standardOutputColor;
+
 
         logContentContainer = GameObject.Find("LogContentContainer");
         logObject.GetComponent<CanvasGroup>().alpha = 0;

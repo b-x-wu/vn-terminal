@@ -2,17 +2,16 @@
 
 A reskin for the terminal that makes it look like a visual novel.
 
-![screenshot of Visual Novel Terminal](docs/screenshot.png)
+![screenshot of Visual Novel Terminal](Docs/screenshot.png)
 
 ## Quick Start
 
 1. Clone this repository.
-2. Unpack [`dist.zip`](/dist.zip).
-3. In the unpacked file, run `vn-terminal.exe`.
+2. Unzip the `.zip` file corresponding to your system's OS in the [`Dist`](./Dist/) directory.
 
 ## Configuration
 
-Visual Novel Terminal allows user to customize and configure their terminal experience. In the `vn-terminal_Data` directory, create a `config.json` file if it doesn't already exist. Modify the value of the following feels to fit your needs.
+Visual Novel Terminal allows user to customize and configure their terminal experience. In the directory housing your executable data, create a `config.json` file if it doesn't already exist. Modify the value of the following feels to fit your needs.
 
 | Field 	| Type 	| Description 	| Default 	|
 |---	|---	|---	|---	|
@@ -29,11 +28,11 @@ Visual Novel Terminal allows user to customize and configure their terminal expe
 
 ## Screenshots
 
-![screenshot of Visual Novel terminal with Blahaj and the Trans flag](docs/screenshot_blahaj.png)
+![screenshot of Visual Novel terminal with Blahaj and the Trans flag](Docs/screenshot_blahaj.png)
 
-![screenshot of Visual Novel terminal with Patrick Bateman from American Psycho in his apartment](docs/screenshot_american_psycho.png)
+![screenshot of Visual Novel terminal with Patrick Bateman from American Psycho in his apartment](Docs/screenshot_american_psycho.png)
 
-![screenshot of Visual Novel terminal with the tbh creature](docs/screenshot_yippee.png)
+![screenshot of Visual Novel terminal with the tbh creature](Docs/screenshot_yippee.png)
 
 
 ## Credits

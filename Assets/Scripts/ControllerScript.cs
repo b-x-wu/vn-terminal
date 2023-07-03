@@ -222,11 +222,11 @@ public class ControllerScript : MonoBehaviour
             continueArrow.color = Color.white;
             if (messageBuffer.Count == 0)
             {
-                controllerState = Input.GetKey("space") ? ControllerState.ReadyForUserContinue : ControllerState.ReadyForUserInput;
+                controllerState = Input.GetKey("space") || Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.KeypadEnter) || Input.GetMouseButton(0) ? ControllerState.ReadyForUserContinue : ControllerState.ReadyForUserInput;
                 return;
             }
 
-            controllerState = Input.GetKey("space") ? ControllerState.ReadyForPrintLine : ControllerState.ReadyForUserContinue;
+            controllerState = Input.GetKey("space") || Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.KeypadEnter) || Input.GetMouseButton(0) ? ControllerState.ReadyForPrintLine : ControllerState.ReadyForUserContinue;
             return;
         }
 

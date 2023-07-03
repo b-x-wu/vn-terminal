@@ -1,13 +1,8 @@
 # Visual Novel Terminal
 
-A customaizable reskin for the terminal that makes it look like a visual novel.
+A customizable reskin for the terminal that makes it look like a visual novel. Check out [the page on itch.io](https://bruce-x-wu.itch.io/visual-novel-terminal)!
 
 ![screenshot of Visual Novel Terminal](Docs/screenshot.png)
-
-## Quick Start
-
-1. Clone this repository.
-2. Unzip the `.zip` file corresponding to your system's OS in the [`Dist`](./Dist/) directory.
 
 ## Configuration
 

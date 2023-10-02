@@ -6,7 +6,7 @@ A customizable reskin for the terminal that makes it look like a visual novel. C
 
 ## Configuration
 
-Visual Novel Terminal allows user to customize and configure their terminal experience. In the directory housing your executable data, create a `config.json` file if it doesn't already exist. Modify the value of the following feels to fit your needs.
+Visual Novel Terminal allows user to customize and configure their terminal experience. In the directory housing your executable data, create a `config.json` file if it doesn't already exist. Modify the value of the following fields to fit your needs.
 
 | Field 	| Type 	| Description 	| Default 	|
 |---	|---	|---	|---	|
